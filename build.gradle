@@ -1,0 +1,53 @@
+plugins {
+    id 'com.palantir.git-version' version '0.12.3'
+    id 'org.checkerframework' version '0.5.11'
+}
+
+apply from: 'dependencies.gradle'
+
+ext.projectVersion = '1.0'
+def gitHash = versionDetails().gitHash
+
+allprojects {
+    group = 'io.github.underscore11code'
+    description = 'CarbonCord'
+    version = project.property('projectVersion') + '-' + gitHash
+}
+
+subprojects {
+    apply plugin: 'checkstyle'
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+    apply plugin: 'org.checkerframework'
+
+    repositories {
+        maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+        maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+//        maven { url = 'https://repo.minebench.de/' } // Not sure why I need this, but it doesn't compile without it
+        maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+        jcenter()
+
+        mavenLocal()
+    }
+
+    dependencies {
+        checkstyle("ca.stellardrift:stylecheck:${vers['stylecheck']}")
+    }
+
+    checkstyle {
+        def configRoot = new File(rootProject.projectDir, '.checkstyle')
+        toolVersion = vers['checkstyle']
+        configDirectory = configRoot
+        configProperties = [basedir: configRoot.getAbsolutePath()]
+    }
+
+    checkerFramework {
+        checkers = [
+                'org.checkerframework.checker.nullness.NullnessChecker'
+        ]
+    }
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
