@@ -1,2 +1,5 @@
 rootProject.name = 'CarbonCord'
+include 'core'
+include 'messaging'
+include 'redis-messaging'
 

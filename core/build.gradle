@@ -1,0 +1,25 @@
+plugins {
+  id 'java-library'
+  id 'application'
+  id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+description = 'Core'
+
+dependencies {
+  implementation project(':redis-messaging')
+}
+
+shadowJar {
+  archiveClassifier.set("")
+  archiveBaseName.set(rootProject.description + '-' +  project.description)
+  archiveVersion.set(projectVersion)
+  mainClassName = "io.github.underscore11code.ccord.core.CarbonCore"
+}
+
+jar {
+  enabled(false)
+}
+
+tasks.build.dependsOn tasks.shadowJar
+
