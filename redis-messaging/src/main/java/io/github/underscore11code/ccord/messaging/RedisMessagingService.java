@@ -2,6 +2,8 @@ package io.github.underscore11code.ccord.messaging;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import io.github.underscore11code.ccord.messaging.packets.PingPacket;
+import io.github.underscore11code.ccord.messaging.packets.PingResponsePacket;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -52,6 +54,10 @@ public final class RedisMessagingService extends AbstractMessagingService {
         throw new PacketDecodeException(e);
       }
     }));
+
+    this.bus().register(PingPacket.class, packet -> {
+      if (!packet.isFromThis()) this.send(new PingResponsePacket(packet));
+    });
   }
 
   @Override

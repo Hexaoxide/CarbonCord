@@ -1,8 +1,10 @@
 package io.github.underscore11code.ccord.core;
 
-import io.github.underscore11code.ccord.messaging.Packet;
 import io.github.underscore11code.ccord.messaging.RedisMessagingService;
+import io.github.underscore11code.ccord.messaging.packets.PingPacket;
 import io.lettuce.core.RedisURI;
+
+import java.util.UUID;
 
 public final class CarbonCore {
   public static void main(final String[] args) {
@@ -13,16 +15,10 @@ public final class CarbonCore {
     } catch (final Exception e) {
       e.printStackTrace();
     }
-    localhost.bus().register(Packet.class, event -> {
-      System.out.println(event.packetID());
-    });
 
-    localhost.send(new PacketTest());
+    localhost.send(new PingPacket(UUID.randomUUID(), UUID.randomUUID()));
   }
 
   private CarbonCore() {
-  }
-
-  public static class PacketTest extends Packet {
   }
 }
