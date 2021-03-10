@@ -1,23 +1,25 @@
 ext {
-    vers = [
-            'checkstyle'        : '8.34',
-            'stylecheck'        : '0.1-SNAPSHOT',
-            'checker-qual'      : '3.8.0',
-            'gson'              : '2.8.6',
-            'slf4j-api'         : '1.7.25',
-            'slf4j-jdk14'       : '1.7.28',
-            'adventure'         : '4.4.0',
-            'minimessage'       : '4.1.0-SNAPSHOT',
-            'kyori-event-api'   : '4.0.0-SNAPSHOT',
-            'kyori-registry'    : '1.0.0-SNAPSHOT',
-            'cloud'             : '1.4.0',
-            'configurate'       : '4.0.0',
-            'lettuce'           : '6.0.2.RELEASE',
+  vers = [
+    'checkstyle'      : '8.34',
+    'stylecheck'      : '0.1-SNAPSHOT',
+    'checker-qual'    : '3.8.0',
+    'gson'            : '2.8.6',
+    'slf4j-api'       : '1.7.25',
+    'slf4j-jdk14'     : '1.7.28',
+    'log4j'           : '2.14.0',
+    'adventure'       : '4.4.0',
+    'minimessage'     : '4.1.0-SNAPSHOT',
+    'kyori-event-api' : '4.0.0-SNAPSHOT',
+    'kyori-registry'  : '1.0.0-SNAPSHOT',
+    'cloud'           : '1.4.0',
+    'configurate'     : '4.0.0',
+    'lettuce'         : '6.0.2.RELEASE',
+    'jda'             : '4.2.0_240',
 
-            // Bukkit
-            'paper-api'         : '1.16.5-R0.1-SNAPSHOT',
-            'snakeyaml'         : '1.27',
-            'placeholder-api'   : '2.10.9',
-            'vault'             : '1.7',
-    ]
+    // Bukkit
+    'paper-api'       : '1.16.5-R0.1-SNAPSHOT',
+    'snakeyaml'       : '1.27',
+    'placeholder-api' : '2.10.9',
+    'vault'           : '1.7',
+  ]
 }

@@ -10,13 +10,23 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.pubsub.RedisPubSubListener;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.pubsub.api.sync.RedisPubSubCommands;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinWorkerThread;
 
 public final class RedisMessagingService extends AbstractMessagingService {
+  private static final Logger logger = LoggerFactory.getLogger(RedisMessagingService.class);
   private static final Gson gson = new Gson();
   private static final String CHANNEL_NAME = "carboncord";
-  private final ForkJoinPool pool = new ForkJoinPool();
+  // Despite JDocs saying handler is nullable, it's not annotated *flips table*
+  @SuppressWarnings("argument.type.incompatible")
+  private final ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(), pool1 -> {
+    final ForkJoinWorkerThread newThread = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool1);
+    newThread.setName("CCord-RedisPool-" + newThread.getPoolIndex());
+    return newThread;
+  }, null, false);
 
   private final RedisClient client;
   private StatefulRedisConnection<String, String> send;
@@ -30,10 +40,12 @@ public final class RedisMessagingService extends AbstractMessagingService {
 
   @Override
   public void connect() throws Exception {
+    logger.info("Connecting to Redis...");
     final StatefulRedisPubSubConnection<String, String> pubSub = this.client.connectPubSub();
     this.receive = pubSub.sync();
     this.receive.subscribe(CHANNEL_NAME);
     this.send = this.client.connect();
+    logger.info("Connected!");
 
     pubSub.addListener((Listener) (channel, message) -> this.pool.submit(() -> {
       final String[] split = message.split(" ", 2);
@@ -58,6 +70,10 @@ public final class RedisMessagingService extends AbstractMessagingService {
     this.bus().register(PingPacket.class, packet -> {
       if (!packet.isFromThis()) this.send(new PingResponsePacket(packet));
     });
+
+    this.bus().register(Packet.class, packet -> {
+      logger.debug("Packet in: {} (type {})", packet, packet.getClass().getName());
+    });
   }
 
   @Override
@@ -71,6 +87,7 @@ public final class RedisMessagingService extends AbstractMessagingService {
   @Override
   public void send(final Packet packet) {
     this.pool.submit(() -> {
+      logger.debug("Packet out: {} (type {})", packet, packet.getClass().getName());
       final String encoded = packet.getClass().getName() + " " + gson.toJson(packet);
       this.send.sync().publish(CHANNEL_NAME, encoded);
     });

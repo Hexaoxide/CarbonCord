@@ -14,4 +14,8 @@ public interface MessageService {
   void send(Packet packet);
 
   EventBus<Packet> bus();
+
+  static MessageService simple() {
+    return new AbstractMessagingService.Simple();
+  }
 }

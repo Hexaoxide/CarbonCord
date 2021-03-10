@@ -18,4 +18,20 @@ public abstract class AbstractMessagingService implements MessageService {
   public EventBus<Packet> bus() {
     return this.eventBus;
   }
+
+  public static class Simple extends AbstractMessagingService {
+
+    @Override
+    public void connect() {
+    }
+
+    @Override
+    public void disconnect() {
+    }
+
+    @Override
+    public void send(final Packet packet) {
+      this.bus().post(packet);
+    }
+  }
 }

@@ -1,24 +1,18 @@
 package io.github.underscore11code.ccord.core;
 
-import io.github.underscore11code.ccord.messaging.RedisMessagingService;
-import io.github.underscore11code.ccord.messaging.packets.PingPacket;
-import io.lettuce.core.RedisURI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
+import java.io.File;
 
 public final class CarbonCore {
-  public static void main(final String[] args) {
-    System.out.println("hello");
-    final RedisMessagingService localhost = new RedisMessagingService(RedisURI.builder().withHost("localhost").build());
-    try {
-      localhost.connect();
-    } catch (final Exception e) {
-      e.printStackTrace();
-    }
+  private static final Logger logger = LoggerFactory.getLogger(CarbonCore.class);
+  //private MessageService messageService;
+  //private JDA jda;
 
-    localhost.send(new PingPacket(UUID.randomUUID(), UUID.randomUUID()));
-  }
+  public CarbonCore(final File configDir) {
+    logger.info("Starting CarbonCord-Core.");
 
-  private CarbonCore() {
+
   }
 }
