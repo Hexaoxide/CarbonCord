@@ -5,4 +5,5 @@ plugins {
 dependencies {
     api("net.kyori:event-api:${vers['kyori-event-api']}")
     api("com.google.code.gson:gson:${vers['gson']}")
+
 }

@@ -33,7 +33,9 @@ subprojects {
 
     dependencies {
         checkstyle("ca.stellardrift:stylecheck:${vers['stylecheck']}")
-        compileOnlyApi "org.slf4j:slf4j-api:${vers['slf4j-api']}"
+        if (project.name != "common") {
+            implementation project(':common')
+        }
     }
 
     checkstyle {
