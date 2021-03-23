@@ -16,7 +16,7 @@ public abstract class Packet {
     this.packetID = UUID.randomUUID();
   }
 
-  public UUID origin() {
+  public UUID serverId() {
     return this.origin;
   }
 

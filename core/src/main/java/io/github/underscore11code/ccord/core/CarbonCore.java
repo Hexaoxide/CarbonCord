@@ -1,7 +1,10 @@
 package io.github.underscore11code.ccord.core;
 
-import io.github.underscore11.ccord.common.Config;
+import io.github.underscore11code.ccord.common.Config;
+import io.github.underscore11code.ccord.common.VersionChecker;
 import io.github.underscore11code.ccord.core.config.CarbonCordCoreConfig;
+import io.github.underscore11code.ccord.core.managers.ConnectionManager;
+import io.github.underscore11code.ccord.core.managers.DiscordManager;
 import io.github.underscore11code.ccord.messaging.MessageService;
 import io.github.underscore11code.ccord.messaging.RedisMessagingService;
 import net.dv8tion.jda.api.JDA;
@@ -12,16 +15,23 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.configurate.ConfigurateException;
 
 import java.io.File;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public final class CarbonCore {
   private static final Logger logger = LoggerFactory.getLogger(CarbonCore.class);
   private static @Nullable CarbonCore instance;
+
   private final MessageService messageService;
   private final JDA jda;
+  private final ConnectionManager connectionManager;
+  private final DiscordManager discordManager;
+  private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+
   private final Config<CarbonCordCoreConfig> config;
   private final File configDir;
 
-  @SuppressWarnings("assignment.type.incompatible")
+  @SuppressWarnings({"assignment.type.incompatible", "argument.type.incompatible"})
   public CarbonCore(final File configDir) throws Exception {
     if (instance != null) {
       throw new IllegalStateException("Attempted to load CarbonCore while it's already running!");
@@ -29,6 +39,11 @@ public final class CarbonCore {
     instance = this;
 
     logger.info("Starting CarbonCord Core.");
+
+    if (!VersionChecker.checkJvmVersion()) {
+      logger.error("JVM version check has found an incompatible JVM version, aborting startup.");
+      throw new RuntimeException("JVM Version check failed.");
+    }
 
     this.configDir = configDir;
     logger.debug("configDir: " + configDir.getAbsolutePath());
@@ -59,6 +74,9 @@ public final class CarbonCore {
     logger.info("Starting up Discord connection...");
     this.jda = JDABuilder.createDefault(this.config.get().botToken()).build().awaitReady();
     logger.info("Connected to Discord as {}", this.jda.getSelfUser().getAsTag());
+
+    this.connectionManager = new ConnectionManager();
+    this.discordManager = new DiscordManager(this);
   }
 
   public void shutdown() throws Exception {
@@ -80,5 +98,21 @@ public final class CarbonCore {
 
   public File configDir() {
     return this.configDir;
+  }
+
+  public MessageService messageService() {
+    return this.messageService;
+  }
+
+  public JDA jda() {
+    return this.jda;
+  }
+
+  public ConnectionManager connectionManager() {
+    return this.connectionManager;
+  }
+
+  public ScheduledExecutorService scheduledExecutorService() {
+    return this.scheduledExecutorService;
   }
 }

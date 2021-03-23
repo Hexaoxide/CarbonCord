@@ -1,0 +1,4 @@
+name: "CarbonCord"
+main: "io.github.underscore11code.ccord.client.CarbonClientPaper"
+version: "<ver>"
+api-version: "1.16"

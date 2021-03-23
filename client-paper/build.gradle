@@ -1,0 +1,29 @@
+plugins {
+  id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+repositories {
+  maven {
+    url 'https://papermc.io/repo/repository/maven-public/'
+  }
+}
+
+description = 'Paper-Client'
+
+dependencies {
+  implementation project(":client")
+
+  compileOnly "com.destroystokyo.paper:paper-api:${vers["paper-api"]}"
+}
+
+shadowJar {
+  archiveClassifier.set("")
+  archiveBaseName.set(rootProject.description + '-' +  project.description)
+  archiveVersion.set(projectVersion)
+}
+
+jar {
+  enabled(false)
+}
+
+tasks.build.dependsOn tasks.shadowJar

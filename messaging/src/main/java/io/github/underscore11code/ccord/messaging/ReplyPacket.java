@@ -18,7 +18,7 @@ public abstract class ReplyPacket extends Packet {
   }
 
   public ReplyPacket(final Packet respondingTo) {
-    this.respondingToServer = respondingTo.origin();
+    this.respondingToServer = respondingTo.serverId();
     this.respondingToPacketId = respondingTo.packetID();
   }
 

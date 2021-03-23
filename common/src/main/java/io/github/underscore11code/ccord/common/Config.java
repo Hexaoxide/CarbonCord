@@ -1,4 +1,4 @@
-package io.github.underscore11.ccord.common;
+package io.github.underscore11code.ccord.common;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;

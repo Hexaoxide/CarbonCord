@@ -39,7 +39,7 @@ public final class RedisMessagingService extends AbstractMessagingService {
   }
 
   @Override
-  public void connect() throws Exception {
+  public void connect() {
     logger.info("Connecting to Redis...");
     final StatefulRedisPubSubConnection<String, String> pubSub = this.client.connectPubSub();
     this.receive = pubSub.sync();
@@ -56,6 +56,8 @@ public final class RedisMessagingService extends AbstractMessagingService {
       try {
         clazz = Class.forName(split[0]);
         final Object o = gson.fromJson(split[1], clazz);
+        if (!(o instanceof PingPacket || o instanceof PingResponsePacket))
+          logger.debug("Packet in: {} (type {})", split[1], split[0]);
         if (o == null) {
           throw new PacketDecodeException("Null packet from " + message);
         }
@@ -66,14 +68,6 @@ public final class RedisMessagingService extends AbstractMessagingService {
         throw new PacketDecodeException(e);
       }
     }));
-
-    this.bus().register(PingPacket.class, packet -> {
-      if (!packet.isFromThis()) this.send(new PingResponsePacket(packet));
-    });
-
-    this.bus().register(Packet.class, packet -> {
-      logger.debug("Packet in: {} (type {})", packet, packet.getClass().getName());
-    });
   }
 
   @Override
@@ -87,8 +81,9 @@ public final class RedisMessagingService extends AbstractMessagingService {
   @Override
   public void send(final Packet packet) {
     this.pool.submit(() -> {
-      logger.debug("Packet out: {} (type {})", packet, packet.getClass().getName());
       final String encoded = packet.getClass().getName() + " " + gson.toJson(packet);
+      if (!(packet instanceof PingPacket || packet instanceof PingResponsePacket))
+        logger.debug("Packet out: {} (type {})", encoded, packet.getClass().getName());
       this.send.sync().publish(CHANNEL_NAME, encoded);
     });
   }

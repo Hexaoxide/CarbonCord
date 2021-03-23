@@ -6,4 +6,7 @@ dependencies {
   api "org.slf4j:slf4j-api:${vers['slf4j-api']}"
   api "org.spongepowered:configurate-core:${vers['configurate']}"
   api "org.spongepowered:configurate-hocon:${vers['configurate']}"
+  api "net.kyori:adventure-api:${vers['adventure']}"
+  api "net.kyori:adventure-text-serializer-gson:${vers['adventure']}"
+  api "net.kyori:adventure-text-serializer-plain:${vers['adventure']}"
 }

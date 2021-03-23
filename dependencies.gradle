@@ -7,7 +7,7 @@ ext {
     'slf4j-api'       : '1.7.25',
     'slf4j-jdk14'     : '1.7.28',
     'log4j'           : '2.14.0',
-    'adventure'       : '4.4.0',
+    'adventure'       : '4.7.0',
     'minimessage'     : '4.1.0-SNAPSHOT',
     'kyori-event-api' : '4.0.0-SNAPSHOT',
     'kyori-registry'  : '1.0.0-SNAPSHOT',

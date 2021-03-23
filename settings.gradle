@@ -4,4 +4,6 @@ include 'messaging'
 include 'redis-messaging'
 include 'standalone-core'
 include 'common'
+include 'client'
+include 'client-paper'
 

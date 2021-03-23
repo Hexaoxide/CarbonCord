@@ -49,6 +49,9 @@ subprojects {
         checkers = [
                 'org.checkerframework.checker.nullness.NullnessChecker'
         ]
+        extraJavacArgs = [
+                '-AsuppressWarnings=initialization'
+        ]
     }
 
     sourceCompatibility = '1.8'
